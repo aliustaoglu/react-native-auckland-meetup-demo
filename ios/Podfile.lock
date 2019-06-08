@@ -1,0 +1,16 @@
+PODS:
+  - PlayerKit (2.0.0)
+
+DEPENDENCIES:
+  - PlayerKit
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - PlayerKit
+
+SPEC CHECKSUMS:
+  PlayerKit: cacafe8ef15294e2280d002a5c71faf07947a1a9
+
+PODFILE CHECKSUM: 4114fddd0e78aa9dba542ad30805c4d03d871b33
+
+COCOAPODS: 1.7.1
