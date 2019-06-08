@@ -24,7 +24,7 @@ Analyzing dependencies
 [!] The target `rnAKLMeetupDemo-tvOSTests` is declared multiple times.
 ```
 
-![pod install](https://raw.githubusercontent.com/aliustaoglu/react-native-auckland-meetup-demo/master/pod-install.png)
+![pod install](https://raw.githubusercontent.com/aliustaoglu/react-native-auckland-meetup-demo/master/pics/pod-install.png)
 
 As shown in the picture above, we don't have any dependencies yet.
 
@@ -52,15 +52,15 @@ Under rnAKLMeetupDemo:
 3. Xcode will ask you to create a bridging header. Say yes to it. You can change the name but default name is also OK. I used the default name
 4. Bridging header will only be created once. Next time you want to add another Swift file you will not need and should not create another bridging header.
 
-![pod install](https://raw.githubusercontent.com/aliustaoglu/react-native-auckland-meetup-demo/master/add-swift-and-bridge.gif)
+![pod install](https://raw.githubusercontent.com/aliustaoglu/react-native-auckland-meetup-demo/master/pics/add-swift-and-bridge.gif)
 
 React Native does not work with Swift-only setup yet. So, we need to create Objective-C files just to export our Swift files. Don't worry, Objective C files will be minimal. You can think them as interfaces to the implementation we do in Swift.
 
 Under the same folder (NativeModules), this time create an Objective-C file called 
 
-![create objective c](https://raw.githubusercontent.com/aliustaoglu/react-native-auckland-meetup-demo/master/create-objective-c.png)
+![create objective c](https://raw.githubusercontent.com/aliustaoglu/react-native-auckland-meetup-demo/master/pics/create-objective-c.png)
 
-![custom player](https://raw.githubusercontent.com/aliustaoglu/react-native-auckland-meetup-demo/master/customplayer.m.png)
+![custom player](https://raw.githubusercontent.com/aliustaoglu/react-native-auckland-meetup-demo/master/pics/customplayer.m.png)
 
 Now we have 3 files:
 
@@ -154,7 +154,7 @@ With requireNativeComponent, we import the UIView class from the Swift thru Obje
 We need to specify height and width to see the video player.
 
 
-![player](https://raw.githubusercontent.com/aliustaoglu/react-native-auckland-meetup-demo/master/custom-player.png)
+![player](https://raw.githubusercontent.com/aliustaoglu/react-native-auckland-meetup-demo/master/pics/custom-player.png)
 
 It works!
 
