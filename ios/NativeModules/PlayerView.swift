@@ -24,7 +24,6 @@ class PlayerView: UIView {
     player.set(AVURLAsset(url: URL.init(string: "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4")!))
     player.view.frame = frame
     self.addSubview(player.view)
-    
   }
 
   

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, requireNativeComponent } from 'react-native';
 
-const CustomPlayer = requireNativeComponent('CustomPlayerView')
+const CustomPlayer = requireNativeComponent('CustomPlayer')
 
 export default class App extends Component {
   render() {

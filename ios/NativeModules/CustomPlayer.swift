@@ -3,8 +3,8 @@ import UIKit
 import PlayerKit
 import AVFoundation
 
-@objc(CustomPlayerViewManager)
-class CustomPlayerViewManager: RCTViewManager {
+@objc(CustomPlayer)
+class CustomPlayer: RCTViewManager {
 
   
   override func view() -> UIView! {
