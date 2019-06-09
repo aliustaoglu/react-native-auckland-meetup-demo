@@ -5,12 +5,10 @@ import AVFoundation
 
 @objc(CustomPlayerViewManager)
 class CustomPlayerViewManager: RCTViewManager {
+
   
   override func view() -> UIView! {
-    let player = RegularPlayer()
-    player.set(AVURLAsset(url: URL.init(string: "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4")!))
-    player.play()
-    return player.view
+    return PlayerView(frame: CGRect(x:0, y:0, width: 300, height: 300))
   }
   
   override static func requiresMainQueueSetup() -> Bool {

@@ -41,6 +41,7 @@
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
 		D38D0DB722AB969D006CE03F /* CustomPlayerViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D38D0DB622AB969D006CE03F /* CustomPlayerViewManager.swift */; };
 		D38D0DB922AB98F0006CE03F /* CustomPlayerViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D38D0DB822AB98F0006CE03F /* CustomPlayerViewManager.m */; };
+		D3B2928822ACFFB5002A9874 /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B2928722ACFFB5002A9874 /* PlayerView.swift */; };
 		ED297163215061F000B7C4FE /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED297162215061F000B7C4FE /* JavaScriptCore.framework */; };
 		ED2971652150620600B7C4FE /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED2971642150620600B7C4FE /* JavaScriptCore.framework */; };
 /* End PBXBuildFile section */
@@ -353,6 +354,7 @@
 		D38D0DB522AB969D006CE03F /* rnAKLMeetupDemo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "rnAKLMeetupDemo-Bridging-Header.h"; sourceTree = "<group>"; };
 		D38D0DB622AB969D006CE03F /* CustomPlayerViewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomPlayerViewManager.swift; sourceTree = "<group>"; };
 		D38D0DB822AB98F0006CE03F /* CustomPlayerViewManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CustomPlayerViewManager.m; sourceTree = "<group>"; };
+		D3B2928722ACFFB5002A9874 /* PlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerView.swift; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
 /* End PBXFileReference section */
@@ -635,8 +637,9 @@
 			isa = PBXGroup;
 			children = (
 				D38D0DB622AB969D006CE03F /* CustomPlayerViewManager.swift */,
-				D38D0DB522AB969D006CE03F /* rnAKLMeetupDemo-Bridging-Header.h */,
 				D38D0DB822AB98F0006CE03F /* CustomPlayerViewManager.m */,
+				D38D0DB522AB969D006CE03F /* rnAKLMeetupDemo-Bridging-Header.h */,
+				D3B2928722ACFFB5002A9874 /* PlayerView.swift */,
 			);
 			path = NativeModules;
 			sourceTree = "<group>";
@@ -1181,6 +1184,7 @@
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				D38D0DB922AB98F0006CE03F /* CustomPlayerViewManager.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
+				D3B2928822ACFFB5002A9874 /* PlayerView.swift in Sources */,
 				D38D0DB722AB969D006CE03F /* CustomPlayerViewManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
