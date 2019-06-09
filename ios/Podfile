@@ -3,23 +3,10 @@ platform :ios, '9.0'
 
 target 'rnAKLMeetupDemo' do
   # Comment the next line if you don't want to use dynamic frameworks
-  use_frameworks!
+  # use_frameworks!
 
   # Pods for rnAKLMeetupDemo
 
   pod "PlayerKit"
-
-end
-
-target 'rnAKLMeetupDemo-tvOS' do
-  # Comment the next line if you don't want to use dynamic frameworks
-  use_frameworks!
-
-  # Pods for rnAKLMeetupDemo-tvOS
-
-  target 'rnAKLMeetupDemo-tvOSTests' do
-    inherit! :search_paths
-    # Pods for testing
-  end
 
 end
