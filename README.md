@@ -165,9 +165,13 @@ But video does not play because we did not implement anything about it. If you a
     return player.view
 ```
 
-But let's do this by using a prop so user can decide whether the video should autoplay or not.
+But let's do this by using a prop so user can decide whether the video should autoplay or not. And also let's not hardcode filename.
 
 ```javascript
-<CustomPlayer autoPlay={true} style={{ width: 300, height: 300 }} />
+<CustomPlayer 
+  autoPlay={true} 
+  filename="http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4"
+  style={{ width: 300, height: 300 }} />
 ```
 
+Before doing that, let's separate our View logic from ViewManager.

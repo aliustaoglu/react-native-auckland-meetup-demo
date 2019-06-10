@@ -8,7 +8,10 @@ export default class App extends Component {
     return (
       <View style={styles.container}>
         <Text>Welcome to React Native!</Text>
-        <CustomPlayer autoPlay="no" style={{ width: 300, height: 300 }} />
+        <CustomPlayer 
+          autoPlay={true} 
+          filename="http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4"
+          style={{ width: 300, height: 300 }} />
       </View>
     );
   }
