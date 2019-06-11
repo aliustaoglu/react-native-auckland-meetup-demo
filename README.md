@@ -175,3 +175,298 @@ But let's do this by using a prop so user can decide whether the video should au
 ```
 
 Before doing that, let's separate our View logic from ViewManager.
+
+Add a file named PlayerView.swift next to your ViewManager.
+
+```swift
+import Foundation
+import UIKit
+
+class PlayerView: UIView {
+  
+  
+  override init(frame:CGRect) {
+    super.init(frame: frame)
+    self.addSubview(UIView())
+  }
+  
+  required init?(coder aDecoder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+    
+}
+```
+
+and update CustomPlayer.swift file as below:
+
+```swift
+@objc(CustomPlayer)
+class CustomPlayer: RCTViewManager {
+
+  
+  override func view() -> UIView! {
+    return PlayerView(frame: CGRect(x:0, y:0, width: 300, height: 300))
+  }
+  
+  override static func requiresMainQueueSetup() -> Bool {
+    return true
+  }
+}
+
+```
+
+Now we have a view that does not do anything. Just ignore `required init?` bit and take it as it is now.
+
+Let's change PlayerView as below
+
+
+```swift
+  import PlayerKit
+  import AVFoundation
+  ...
+  override init(frame:CGRect) {
+    super.init(frame: frame)
+    player = RegularPlayer()
+    player.set(AVURLAsset(url: URL.init(string: "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4")!))
+    player.play()
+    player.view.frame = frame
+    self.addSubview(player.view)
+  }
+
+```
+
+Now, PlayerView is ready to be called from JavaScript. So, let's update JavaScript as below:
+
+```javascript
+import { requireNativeComponent } from 'react-native';
+
+...
+
+<CustomPlayer style={{ width: 300, height: 300 }} />
+
+```
+
+Now run the application again. Everything is hard coded. But works smoothly.
+
+Now let's add autoPlay and filename props to the React element and manage it from the native side.
+
+To export the prop we use RCT_EXPORT_VIEW_MODULE macro in the Objective-C. 
+
+```objective-c
+#import <Foundation/Foundation.h>
+#import "React/RCTViewManager.h"
+
+@interface RCT_EXTERN_MODULE(CustomPlayer, RCTViewManager)
+  RCT_EXPORT_VIEW_PROPERTY(autoPlay, BOOL)
+  RCT_EXPORT_VIEW_PROPERTY(filename, NSString)
+@end
+
+```
+
+Now where to add autoPlay and filename to Swift?
+
+Update your PlayerView.swift file as below and pay attention to autoPlay and filename variables. We added @objc decorator to sign them as exportable to Objective-C and then JavaScript.
+
+Also setters work asyncronously, so you cannot use these props in the init() function. When the props are set, didSetProps() function is called. It is called with changedProps parameters which include an array of prop names. This was also one of my reasons to separate UIView logic from RCTViewManager. I can easily override lifecycle functions and have tidier components.
+
+```swift
+import Foundation
+import UIKit
+import PlayerKit
+import AVFoundation
+
+class PlayerView: UIView {
+  
+  @objc var autoPlay: Bool = false
+  @objc var filename: NSString = ""
+  var player: RegularPlayer!
+  
+  override init(frame:CGRect) {
+    super.init(frame: frame)
+    player = RegularPlayer()
+    player.view.frame = frame
+    self.addSubview(player.view)
+  }
+  
+  override func didSetProps(_ changedProps: [String]!) {
+    player.set(AVURLAsset(url: URL.init(string: self.filename as String)!))
+    if (self.autoPlay == true){
+      player.play()
+    }
+  }
+  
+  required init?(coder aDecoder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+  
+}
+
+```
+
+And our javascript file is not hard to guess:
+
+```javascript
+<CustomPlayer 
+  autoPlay={true}
+  filename="http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4"
+  style={{ width: 300, height: 300 }} />
+```
+
+So, the parameters are no longer hard-coded in the native side.
+
+autoPlay prop is very useful but not enough. I want to keep it but also want to control the video manually. I want to be able to do this by 2 ways.
+
+1. By clicking on the video
+2. By clicking on a <Button /> that was created in the JavaScript.
+
+First one is easy. I will just override tochesBegan (or end) function of my view.
+
+Update PlayerView.swift as below. And the code is self explanatory. 
+
+```swift
+  override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+    if (self.player.playing) {
+      self.player.pause()
+    } else {
+      self.player.play()
+    }
+  }
+```
+
+For the second method, we need to send a command from JS to Native. Things will get a little bit complicated. We need to get the UIView's node handle number to send commands. To get the "node handle" we need to use "ref". And then using UIManager's command dispatcher. Let's add some new classes from react-native library.
+
+I will implement the play/pause functionality again, but this time from JavaScript button. JS will send a command to Swift and UIViewManager of IOS will respond to my JS command.
+
+```js
+import { ... UIManager, findNodeHandle, createRef } from 'react-native'
+const playerRef = React.createRef();
+...
+render(){
+  ...
+    <CustomPlayer ref={playerRef} ... ></CustomPlayer>
+    <Button
+      title="Toggle play"
+      onPress={() => {
+        const nativeCommands = UIManager.getViewManagerConfig('CustomPlayer').Commands;
+        const playerNodeHandle = findNodeHandle(playerRef.current);
+        UIManager.dispatchViewManagerCommand(playerNodeHandle, nativeCommands.togglePlay, []);
+      }}
+    />
+}
+```
+
+- First we created a ref and added as ref prop of CustomPlayer.
+- Then get the node handle from the ref.
+- Get native commands that are created with @objc in the view manager.
+- Using dispatchViewManagerCommand I've triggered a command called togglePlay (which I haven't implemented yet)
+
+Let's implement this command in Swift:
+
+update CustomPlayer.swift as below:
+
+```swift
+
+
+....
+class CustomPlayer: RCTViewManager {
+  var playerView: PlayerView!
+  
+  override func view() -> UIView! {
+    playerView = PlayerView(frame: CGRect(x:0, y:0, width: 300, height: 300))
+    return playerView
+  }
+   
+  ...  
+  
+  @objc public func togglePlay(_ node:NSNumber){
+    playerView.togglePlay()
+  }
+
+  
+}
+
+```
+
+ViewManager will call the same named function of the PlayerView class.
+And update PlayerView as below:
+
+```swift
+...
+  public func togglePlay(){
+    if (self.player.playing) {
+      self.player.pause()
+    } else {
+      self.player.play()
+    }
+  }
+...
+
+```
+
+Also we need to update objective-c file as below so that the Swift method will be accessible from JS.
+
+
+```objective-c
+...
+RCT_EXTERN_METHOD(togglePlay:(nonnull NSNumber *)node)
+...
+```
+
+Works pretty good. But, Objective-C is very weird especially for JS developers. This example does not send any params to Swift. When I first tried Objective-C, it took me some time to figure out how to send multiple parameters using an Objc function. So let's do another example where we can change the filename that PlayerKit plays.
+
+```js
+
+...
+<TextInput
+    style={{ width: 300, height: 40, backgroundColor: '#ddd' }}
+    value={this.state.videoUrl}
+    onChange={e => this.setState({ videoUrl: e.nativeEvent.text })}
+  />
+<Button
+    title="Change video"
+    onPress={() => {
+      const playerNodeHandle = findNodeHandle(playerRef.current);
+      UIManager.dispatchViewManagerCommand(playerNodeHandle, this.nativeCommands.changeVideo, [
+        this.state.videoUrl,
+        'dummy param'
+      ]);
+    }}
+/>
+
+...
+
+```
+
+This time we invoke a function called changeVideo and send 2 string parameters. One is a new url and the second one is just a dummy parameter just to show how to add more params. We won't use it. Just check togglePlay does not send any params (other than node handle) and changeVideo sends 2 params.
+
+```objective-c
+RCT_EXTERN_METHOD(togglePlay:(nonnull NSNumber *)node)
+RCT_EXTERN_METHOD(changeVideo:(nonnull NSNumber *)node
+                  url:(nonnull NSString *)url
+                  extraParam:(nonnull NSString *)extraParam)
+```
+
+first parameter in the array that we dispatch will be assigned to url and second param will be assigned to extraParam. playerNodeHandle is assigned to node variable that we will not use. But, RN/Swift uses that in the background.
+
+CustomPlayer.swift
+```swift
+...
+  @objc public func changeVideo(_ node:NSNumber, url:NSString, extraParam:NSString){
+    playerView.changeVideo(url: url, extraParam: extraParam)
+  }
+...
+```
+
+
+PlayerView
+```swift
+  public func changeVideo(url:NSString, extraParam:NSString){
+    player.set(AVURLAsset(url: URL.init(string: url as String)!))
+    player.play()
+  }
+```
+
+You can use the below gist that I've forked from somewhere else to test this new function with different URLs.
+
+https://gist.github.com/aliustaoglu/68d5f9a59c83a9b3f116fa8438c6d14c
+
