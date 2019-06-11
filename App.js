@@ -36,6 +36,10 @@ export default class App extends Component {
           filename="http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4"
           style={{ width: 300, height: 300 }}
           ref={playerRef}
+          onVideoFinished={e => {
+            alert(e.nativeEvent.message);
+            console.log(e.nativeEvent);
+          }}
         />
         <Button
           title="Play/pause"

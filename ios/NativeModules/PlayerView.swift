@@ -3,17 +3,43 @@ import UIKit
 import PlayerKit
 import AVFoundation
 
-class PlayerView: UIView {
+class PlayerView: UIView, PlayerDelegate {
+  func playerDidUpdateState(player: Player, previousState: PlayerState) {
+    
+  }
+  
+  func playerDidUpdatePlaying(player: Player) {
+    
+  }
+  
+  func playerDidUpdateTime(player: Player) {
+    if (player.time>=player.duration) {
+      self.onVideoFinished!(["message": "I am finished", "foo": "bar"])
+    }
+  }
+  
+  func playerDidUpdateBufferedTime(player: Player) {
+    
+  }
+  
+
+
   
   @objc var autoPlay: Bool = false
   @objc var filename: NSString = ""
+  @objc var onVideoFinished:RCTDirectEventBlock? = nil
   var player: RegularPlayer!
+  
+  func updatePlaying(){
+    
+  }
   
   override init(frame:CGRect) {
     super.init(frame: frame)
     player = RegularPlayer()
     player.view.frame = frame
     self.addSubview(player.view)
+    player.delegate = self as PlayerDelegate
   }
   
   public func togglePlay(){

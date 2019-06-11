@@ -470,3 +470,59 @@ You can use the below gist that I've forked from somewhere else to test this new
 
 https://gist.github.com/aliustaoglu/68d5f9a59c83a9b3f116fa8438c6d14c
 
+We need to cover one more thing. Sending a command from Swift to JS. We can do this by using a JS prop. Remember we used `autoPlay={true}`. What happens if we use prop like this: `onVideoFinished={ e => doSomething() }`. Then this function would be invoked from Swift and JS would do anything with the returned params.
+
+For this better if we could use delegates. PlayerKit implements a delegate called PlayerDelegate. It does not have a function when video finishes but it does have one function as the time changes. So when `player.time >= player.duration` we can say the video is finished. 
+
+CustomPlayer.swift
+
+```swift
+class PlayerView: UIView, PlayerDelegate {
+  func playerDidUpdateState(player: Player, previousState: PlayerState) {
+    
+  }
+  
+  func playerDidUpdatePlaying(player: Player) {
+    
+  }
+  
+  func playerDidUpdateTime(player: Player) {
+    if (player.time>=player.duration) {
+      self.onVideoFinished!(["message": "I am finished", "foo": "bar"])
+    }
+  }
+  
+  func playerDidUpdateBufferedTime(player: Player) {
+    
+  }
+
+  ...
+  @objc var onVideoFinished:RCTDirectEventBlock? = nil
+  ...
+
+  init(){
+    ...
+    player.delegate = self as PlayerDelegate
+  }
+
+```
+
+CustomPlayer.m
+
+```objective-c
+...
+RCT_EXPORT_VIEW_PROPERTY(onVideoFinished, RCTDirectEventBlock)
+...
+```
+
+
+App.js
+```javascript
+        <CustomPlayer
+          ...
+          onVideoFinished={e => {
+            alert(e.nativeEvent.message);
+            console.log(e.nativeEvent);
+          }}
+        />
+```
