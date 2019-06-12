@@ -6,7 +6,8 @@ https://www.meetup.com/Auckland-React-Native-Meetup/events/wzdfzqyzjbrb/
 
 This application uses CocoaPods
 
-Please refer to CocoaPods(1) https://guides.cocoapods.org/using/getting-started.html to make the installation
+Please refer to CocoaPods to make the installation:
+https://guides.cocoapods.org/using/getting-started.html
 
 After you've installed Cocoapods to your machine, we need to set it up for our project.
 
@@ -526,3 +527,10 @@ App.js
           }}
         />
 ```
+
+
+# Using UI Native Modules on Android
+
+I have also made a tutorial about using UI native modules on Android. It's not for a video player though but it does not matter. It's for an application that uses Google Maps. I needed to use lots of markers, but it was extremely slow using the react-native-maps. So, I implemented a solution that uses Google Maps Android SDK. I needed to solve similar problems with Android in this tutorial.
+
+https://cuneyt.aliustaoglu.biz/en/how-to-improve-google-maps-performance-in-react-native-for-android/
